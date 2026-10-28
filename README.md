@@ -1,5 +1,81 @@
 # 🏢 NRW Data Center Business Intelligence Platform
 
+## IRIS-SIG-15 Engineering Assessment — Hamburg Master Planning Geoportal Harvester
+
+This branch contains the implementation for **IRIS-SIG-15: Hamburg Master Planning Geoportal Harvester**. It harvests Hamburg Bebauungsplan records from Hamburg's public structured OGC API, normalizes traceable planning records and representative geometries, and loads them idempotently into `iris_staging.signal_ingest` for PostgreSQL 16 / PostGIS 3.4.
+
+### Assessment quick start
+
+**Prerequisites**
+
+- Python 3.12+
+- PostgreSQL 16
+- PostGIS 3.4
+
+Create and activate a virtual environment, then install the project and assessment test dependencies:
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[test]"
+```
+
+Linux/macOS:
+
+```bash
+source .venv/bin/activate
+python -m pip install -e ".[test]"
+```
+
+Set the existing repository database environment variable in a local `.env` file (credentials must not be committed):
+
+```text
+DATABASE_URL=postgresql+psycopg2://<user>:<password>@localhost:5432/<database>
+```
+
+The assessment migration is `alembic/versions/c15a4b7e2d91_create_signal_ingest_staging.py`. The supplied sample repository has a **pre-existing Alembic ancestry gap** (`020c81850f93` references missing revision `7f2c1d8e4a91`), so `alembic upgrade head` cannot be relied on until that upstream history is restored/reconciled. The assessment migration itself was validated against an isolated PostgreSQL 16.15 / PostGIS 3.4.2 database; full details are in the assessment documentation linked below.
+
+Configure a verified collection and run the harvester:
+
+```powershell
+$env:HAMBURG_PLANNING_COLLECTIONS="prosin_imverfahren"
+python -c "from app.runners.hamburg_planning_runner import run; run()"
+```
+
+Run the automated assessment tests:
+
+```bash
+python -m pytest tests/hamburg_planning -v
+```
+
+Local verification collected **17 tests, all passing**. A live ten-feature run against `prosin_imverfahren` produced 10 staging rows; repeating the same run left the table at 10 rows, demonstrating idempotent duplicate handling. Stored geometry was verified as EPSG:25832.
+
+### Key assumptions and source limitations
+
+- The assignment's Hamburg planning source is consumed through Hamburg's public structured OGC API rather than presentation HTML.
+- Verified GeoJSON geometry is treated as EPSG:4326 and transformed to a representative EPSG:25832 point.
+- The verified `plan` property is preferred as stable source identity because observed OGC feature IDs were sequential response IDs.
+- No plan-level publication date was present in the verified feature shape, so `published_at` remains `NULL` rather than substituting ingestion or catalogue time.
+- Domain classification is deterministic and evidence-based. Records without enough source text for port-logistics, grid-heavy-industry, or commercial-zone classification remain explicitly unclassified with a quality warning rather than receiving an inferred category.
+
+### Assessment documentation
+
+See [`docs/hamburg_planning/README.md`](docs/hamburg_planning/README.md) for the complete source contract, setup/run details, field mapping, assumptions, idempotency behavior, tests and limitations.
+
+Supporting deliverables:
+
+- [`docs/hamburg_planning/validation.sql`](docs/hamburg_planning/validation.sql) — validation queries for duplicates, geometry/SRID and quality checks.
+- [`docs/hamburg_planning/sample_output.json`](docs/hamburg_planning/sample_output.json) — public-source-derived sample output.
+- [`docs/hamburg_planning/quality_report.md`](docs/hamburg_planning/quality_report.md) — concise error/quality report and verified limitations.
+- [`tests/hamburg_planning/`](tests/hamburg_planning/) — automated fixture/mock-based test suite.
+
+---
+
 ### AI-Powered Geospatial Business Intelligence for Data Center Site Selection and Infrastructure Analysis
 
 The NRW Data Center Business Intelligence Platform is an AI-powered decision support system that combines geospatial analysis, infrastructure intelligence, renewable energy data, market intelligence, and conversational AI into a single interactive dashboard.
