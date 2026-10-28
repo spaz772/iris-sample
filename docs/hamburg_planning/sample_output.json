@@ -1,0 +1,23 @@
+{
+  "note": "Illustrative normalized staging output based on the public-source schema shape; not represented as a verbatim live Hamburg record.",
+  "source": "hamburg_bebauungsplaene",
+  "source_id": "example-plan-001",
+  "signal_type": "port_logistics",
+  "title": "Example Hafen Logistik Plan",
+  "published_at": null,
+  "source_url": null,
+  "location_text": null,
+  "status": "in_procedure",
+  "geometry": {
+    "type": "Point",
+    "crs": "EPSG:25832",
+    "coordinates": [565000.0, 5935000.0]
+  },
+  "quality_status": "warning",
+  "quality_notes": ["publication_date_not_mapped"],
+  "matched_terms": {
+    "signal_types": ["port_logistics"],
+    "terms": ["hafen", "logistik"],
+    "classification_status": "classified"
+  }
+}
