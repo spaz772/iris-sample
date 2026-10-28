@@ -3,12 +3,16 @@ from app.integrations.hamburg_planning.service import HamburgPlanningService
 
 class FakeClient:
     def iter_features(self, collection_id, *, limit=100, max_pages=None):
-        assert collection_id == "bplaene_imverfahren"
+        assert collection_id == "prosin_imverfahren"
         yield {
             "type": "Feature",
-            "id": "plan-1",
-            "properties": {"plan": "Hafen Logistik Plan"},
-            "geometry": {"type": "Point", "coordinates": [565000, 5935000]},
+            "id": 0,
+            "properties": {
+                "plan": "Hafen Logistik Plan",
+                "feststellung": "nein",
+                "hotlink_iv": "https://www.hamburg.de/example-plan/",
+            },
+            "geometry": {"type": "Point", "coordinates": [10.0, 53.55]},
         }
         yield {
             "type": "Feature",
@@ -35,7 +39,7 @@ def test_service_normalizes_classifies_skips_missing_identity_and_writes():
         repository=repository,
     )
 
-    report = service.run(["bplaene_imverfahren"])
+    report = service.run(["prosin_imverfahren"])
 
     assert report.collections == 1
     assert report.features_seen == 2
@@ -43,6 +47,6 @@ def test_service_normalizes_classifies_skips_missing_identity_and_writes():
     assert report.skipped_missing_id == 1
     assert report.classified == 1
     assert report.unclassified == 1
-    assert repository.rows[0]["source_id"] == "plan-1"
+    assert repository.rows[0]["source_id"] == "Hafen Logistik Plan"
     assert repository.rows[0]["signal_type"] == "port_logistics"
     assert repository.rows[0]["status"] == "in_procedure"
