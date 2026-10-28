@@ -5,25 +5,30 @@ from app.integrations.hamburg_planning.staging import to_staging_row
 def test_staging_row_preserves_identity_and_quality_notes():
     feature = {
         "type": "Feature",
-        "id": "plan-1",
-        "properties": {"plan": "HafenCity 1", "description": "Logistik Terminal"},
-        "geometry": {"type": "Point", "coordinates": [565000, 5934000]},
+        "id": 0,
+        "properties": {
+            "plan": "HafenCity 1",
+            "description": "Logistik Terminal",
+            "feststellung": "nein",
+            "hotlink_iv": "https://www.hamburg.de/example-plan/",
+        },
+        "geometry": {"type": "Point", "coordinates": [10.0, 53.55]},
     }
 
     row = to_staging_row(
         normalize_feature(
             feature,
-            collection_id="app:prosin_imverfahren",
-            source_crs="EPSG:25832",
+            collection_id="prosin_imverfahren",
         )
     )
 
     assert row["source"] == "hamburg_bebauungsplaene"
-    assert row["source_id"] == "plan-1"
+    assert row["source_id"] == "HafenCity 1"
     assert row["signal_type"] == "port_logistics"
     assert row["status"] == "in_procedure"
     assert row["published_at"] is None
-    assert "publication_date_not_mapped" in row["quality_notes"]
+    assert row["source_url"] == "https://www.hamburg.de/example-plan/"
+    assert "publication_date_not_available_in_verified_feature" in row["quality_notes"]
     assert row["geometry"] is not None
 
 
