@@ -24,7 +24,6 @@ load_dotenv()
 # ==========================================================
 
 config = context.config
-
 database_url = os.getenv("DATABASE_URL")
 
 if not database_url:
@@ -59,7 +58,7 @@ target_metadata = Base.metadata
 # Schema Configuration
 # ==========================================================
 
-APPLICATION_SCHEMA = "iris_core"
+APPLICATION_SCHEMAS = {"iris_core", "iris_staging"}
 
 
 def include_name(
@@ -67,22 +66,9 @@ def include_name(
     type_,
     parent_names,
 ):
-    """
-    Only autogenerate migrations for the
-    application schema.
-
-    PostgreSQL/PostGIS system schemas such as:
-
-        - public
-        - topology
-        - tiger
-        - tiger_data
-
-    are ignored.
-    """
-
+    """Limit autogeneration to IRIS-owned application schemas."""
     if type_ == "schema":
-        return name == APPLICATION_SCHEMA
+        return name in APPLICATION_SCHEMAS
 
     return True
 
@@ -90,7 +76,6 @@ def include_name(
 # ==========================================================
 # Offline Migrations
 # ==========================================================
-
 def run_migrations_offline() -> None:
 
     url = config.get_main_option(
@@ -100,35 +85,28 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
-
         include_schemas=True,
         include_name=include_name,
-
         literal_binds=True,
-
         dialect_opts={
             "paramstyle": "named"
         },
-
         compare_type=True,
         compare_server_default=True,
     )
 
     with context.begin_transaction():
-
         context.run_migrations()
 
 
 # ==========================================================
 # Online Migrations
 # ==========================================================
-
 def run_migrations_online() -> None:
 
     connectable = engine_from_config(
         config.get_section(
             config.config_ini_section,
-            {},
         ),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
@@ -139,27 +117,17 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-
             include_schemas=True,
             include_name=include_name,
-
             compare_type=True,
             compare_server_default=True,
         )
 
         with context.begin_transaction():
-
             context.run_migrations()
 
 
-# ==========================================================
-# Run
-# ==========================================================
-
 if context.is_offline_mode():
-
     run_migrations_offline()
-
 else:
-
     run_migrations_online()
