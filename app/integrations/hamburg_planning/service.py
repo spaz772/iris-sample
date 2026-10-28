@@ -43,7 +43,7 @@ class HamburgPlanningService:
         *,
         limit: int = 100,
         max_pages: int | None = None,
-        source_crs: str = "EPSG:25832",
+        source_crs: str = "EPSG:4326",
     ) -> IngestionReport:
         ids = [collection_id.strip() for collection_id in collection_ids if collection_id.strip()]
         if not ids:
