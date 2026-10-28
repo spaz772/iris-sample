@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from uuid import uuid4
 
 from geoalchemy2 import Geometry
@@ -29,7 +30,7 @@ class SignalIngest(BaseEntity):
     source_id: Mapped[str] = mapped_column(String(255), nullable=False)
     signal_type: Mapped[str | None] = mapped_column(String(100))
     title: Mapped[str | None] = mapped_column(Text)
-    published_at: Mapped[object | None] = mapped_column(DateTime(timezone=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     source_url: Mapped[str | None] = mapped_column(Text)
     location_text: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str | None] = mapped_column(String(100))
