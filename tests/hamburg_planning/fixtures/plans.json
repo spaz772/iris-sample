@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "fixture-port-001",
+      "properties": {
+        "plan": "Fixture Hafen Plan 1",
+        "description": "Public test fixture for Hafen Logistik planning"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[566000.0, 5933000.0], [566200.0, 5933000.0], [566200.0, 5933200.0], [566000.0, 5933200.0], [566000.0, 5933000.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fixture-unknown-002",
+      "properties": {
+        "plan": "Fixture Plan 2"
+      },
+      "geometry": null
+    }
+  ],
+  "links": []
+}
