@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from pyproj import CRS, Transformer
+from shapely import transform
 from shapely.geometry import Point, shape
-from shapely.ops import transform
 from shapely.validation import explain_validity
 
 TARGET_CRS = "EPSG:25832"
@@ -52,7 +52,7 @@ def representative_point_25832(
     if source != target:
         try:
             transformer = Transformer.from_crs(source, target, always_xy=True)
-            geom = transform(transformer.transform, geom)
+            geom = transform(geom, transformer.transform, interleaved=False)
         except Exception as exc:
             return GeometryResult(None, (f"crs_transform_failed:{exc}",))
 
