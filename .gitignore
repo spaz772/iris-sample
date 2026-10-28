@@ -1,0 +1,17 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local tooling / OS
+.DS_Store
+Thumbs.db
