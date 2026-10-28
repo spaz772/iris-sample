@@ -38,3 +38,12 @@ dependencies = [
     "streamlit-folium>=0.27.3",
     "streamlit-option-menu>=0.4.0",
 ]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=9.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["alembic*", "tests*", "ui*"]
