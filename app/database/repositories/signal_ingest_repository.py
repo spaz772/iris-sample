@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -35,7 +36,7 @@ class SignalIngestRepository:
                 "quality_status": excluded.quality_status,
                 "quality_notes": excluded.quality_notes,
                 "matched_terms": excluded.matched_terms,
-                "updated_at": excluded.updated_at,
+                "updated_at": func.now(),
             },
         )
         self.session.execute(statement)
