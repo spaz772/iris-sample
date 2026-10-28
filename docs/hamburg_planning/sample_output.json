@@ -1,23 +1,26 @@
 {
-  "note": "Illustrative normalized staging output based on the public-source schema shape; not represented as a verbatim live Hamburg record.",
+  "note": "Public-source-derived normalized example from the verified Hamburg prosin_imverfahren live run on 2026-10-28. Coordinates rounded for readability.",
   "source": "hamburg_bebauungsplaene",
-  "source_id": "example-plan-001",
-  "signal_type": "port_logistics",
-  "title": "Example Hafen Logistik Plan",
+  "source_id": "Barmbek-Nord44",
+  "signal_type": null,
+  "title": "Barmbek-Nord44",
   "published_at": null,
-  "source_url": null,
+  "source_url": "https://www.hamburg.de/hamburg-nord/bauleitplanung/38790/bebauungsplaene/",
   "location_text": null,
   "status": "in_procedure",
   "geometry": {
     "type": "Point",
     "crs": "EPSG:25832",
-    "coordinates": [565000.0, 5935000.0]
+    "coordinates": [569893.0, 5938400.0]
   },
   "quality_status": "warning",
-  "quality_notes": ["publication_date_not_mapped"],
+  "quality_notes": [
+    "publication_date_not_available_in_verified_feature",
+    "insufficient_source_text_for_domain_classification"
+  ],
   "matched_terms": {
-    "signal_types": ["port_logistics"],
-    "terms": ["hafen", "logistik"],
-    "classification_status": "classified"
+    "signal_types": [],
+    "terms": [],
+    "classification_status": "unclassified"
   }
 }
